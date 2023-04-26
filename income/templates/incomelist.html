@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #content {
+            margin-left: 250px;
+        }
+
+        .lsidebar {
+            width: 250px;
+            height: 1000px;
+            background-color: black;
+            position: fixed;
+            right: 0px;
+            top: 0px;
+            color: white;
+            text-align: center;
+        }
+        .lsidebar a{
+            color: white;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+        .lsidebar a:hover{
+            background-color: aqua;
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    {%extends "master.html"%}
+
+    {%block "body"%}
+    <div id="content">
+        <form action="{% url 'income:search' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="srch"><input type="submit" value="Submit">
+
+        </form>
+
+        {% if obj %}
+        <table border="1px">
+            <tr>
+                <td>Income</td>
+                <td>Income Type</td>
+                <td>Date</td>
+                <td>Description</td>
+                <td>User</td>
+                <td colspan="2">Actions</td>
+            </tr>
+            {% for i in obj %}
+            <tr>
+                <td>{{i.income}}</td>
+                <td>{{i.income_type}}</td>
+                <td>{{i.income_date}}</td>
+                <td>{{i.description}}</td>
+                <td>{{i.user.username}}</td>
+                <td><a href="{% url 'income:delete' i.id %}">Delete</a></td>
+                <td><a href="{% url 'income:edit' i.id %}">Edit</a></td>
+            </tr>
+            {%endfor%}
+            <tr>
+                <td>{{total}}</td>
+                <td>Total</td>
+                
+            </tr>
+        </table>
+        {% else %}
+        <script>
+            alert("NO RESULT FOUND!!!")
+        </script>
+        {% endif %}
+        <div class="lsidebar">
+            <h1>sort by income type</h1>
+            <h2><a href="{%url 'income:list'%}">All</a></h2>
+            {%for i in incl %}
+            <h2><a href="{%url 'income:sbi' i%}">{{i}}</a></h2>
+            {%endfor%}
+         
+        </div>
+    </div>
+
+    {%endblock%}
+</body>
+
+</html>
